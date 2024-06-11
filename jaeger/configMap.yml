@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jaeger-config
+  namespace: observability
+data:
+  JAEGER_ENDPOINT: "http://jaeger-collector.observability:4317"  

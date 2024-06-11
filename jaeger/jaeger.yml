@@ -1,0 +1,35 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: jaeger
+  namespace: observability
+spec:
+  ingress:
+    enabled: true
+  strategy: allInOne 
+  allInOne:
+    image: jaegertracing/all-in-one:latest 
+    volumeMounts:
+    - name: jaeger-storage
+      mountPath: /var/log/jaeger/data
+    volumes:
+    - name: jaeger-storage
+      persistentVolumeClaim:
+        claimName: jaeger-pvc-storage
+    tolerations: 
+      - key: CriticalAddonsOnly 
+        operator: Exists 
+      - key: node-role.kubernetes.io/master 
+        effect: NoSchedule 
+      - key: node-role.kubernetes.io/control-plane 
+        effect: NoSchedule
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+              - tmp262
+
