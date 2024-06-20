@@ -4,32 +4,51 @@ metadata:
   name: jaeger
   namespace: observability
 spec:
+  query:
+    image: jaegertracing/jaeger-query:1.58.0
+    serviceType: NodePort
+    nodePort: 30158
   ingress:
-    enabled: true
-  strategy: allInOne 
-  allInOne:
-    image: jaegertracing/all-in-one:latest 
-    volumeMounts:
-    - name: jaeger-storage
-      mountPath: /var/log/jaeger/data
-    volumes:
-    - name: jaeger-storage
-      persistentVolumeClaim:
-        claimName: jaeger-pvc-storage
-    tolerations: 
-      - key: CriticalAddonsOnly 
-        operator: Exists 
-      - key: node-role.kubernetes.io/master 
-        effect: NoSchedule 
-      - key: node-role.kubernetes.io/control-plane 
-        effect: NoSchedule
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-              - tmp262
-
+    enabled: false
+  strategy: Production
+  collector:
+    replicas: 1
+    autoscale: false
+    maxReplicas: 2
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      request:
+        cpu: 50m
+        memory: 100Mi
+  storage:
+    type: elasticsearch
+    dependencies:
+      enabled: true
+      schedule: "30 3 * * 0"
+      sparkMaster:
+      resources:
+        request:
+          memory: 1Gi
+        limits:
+          memory: 1Gi
+    options:
+      es:
+        server-urls: http://elasticsearch.utilities.svc:9200
+  tolerations:
+  - key: CriticalAddonsOnly
+    operator: Exists
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  - key: node-role.kubernetes.io/control-plane
+    effect: NoSchedule
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - svr219
