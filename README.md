@@ -1,8 +1,6 @@
 
 # Jaeger K8s v1.58 
 
-A brief description of what this project does and who it's for
-
 ## Descripcion
 
 Este repositorio contiene la configuración de Jaeger K8s v1.58 en su version de producción, conectado a un Elasticsearch externo y un Prometheus. Esta configuración permite recopilar y analizar datos de rastreo distribuido de aplicaciones en contenedores Kubernetes.
