@@ -5,6 +5,9 @@ metadata:
   namespace: observability
 spec:
   query:
+    metricsStorage:
+      type: prometheus
+      server-url: http://prometheus.prometheus.svc:32222/
     image: jaegertracing/jaeger-query:1.58.0
     serviceType: NodePort
     nodePort: 30158
@@ -25,17 +28,14 @@ spec:
   storage:
     type: elasticsearch
     dependencies:
-      enabled: true
+      enabled: false
       schedule: "30 3 * * 0"
-      sparkMaster:
-      resources:
-        request:
-          memory: 1Gi
-        limits:
-          memory: 1Gi
     options:
+      memory:
+        max-traces: 1500
       es:
         server-urls: http://elasticsearch.utilities.svc:9200
+        index-prefix: jaeger-k8s-prod
   tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
@@ -51,4 +51,4 @@ spec:
           - key: kubernetes.io/hostname
             operator: In
             values:
-            - svr219
+            - tcolp219
