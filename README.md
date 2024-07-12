@@ -1,5 +1,5 @@
 
-# Jaeger K8s v1.58 
+# Jaeger K8s
 
 ## Descripcion
 
