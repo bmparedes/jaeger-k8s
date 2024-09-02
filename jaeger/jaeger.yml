@@ -12,7 +12,7 @@ spec:
     enabled: false
   strategy: Production
   collector:
-    image: jaegertracing/jaeger-collector:1.59.0
+    image: jaegertracing/jaeger-collector:1.57
     replicas: 1
     autoscale: false
     maxReplicas: 2
@@ -32,7 +32,7 @@ spec:
         max-traces: 1500
       es:
         server-urls: http://elasticsearch.utilities.svc:9200
-        index-prefix: jaeger-k8s-prod
+        index-prefix: jaeger
   tolerations:
   - key: CriticalAddonsOnly
     operator: Exists
